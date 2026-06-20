@@ -36,7 +36,7 @@ router.get("/insights", (ctx) => {
   ctx.response.status = 200;
 });
 
-router.get("/insights/create", (ctx) => {
+router.post("/insights/create", (ctx) => {
   const validatedInputs = Insight.pick({ brand: true, text: true })
     .safeParse(Object.fromEntries(ctx.request.url.searchParams));
 
