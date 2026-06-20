@@ -6,7 +6,7 @@ import { Port } from "../lib/utils/index.ts";
 import listInsights from "./operations/list-insights.ts";
 import lookupInsight from "./operations/lookup-insight.ts";
 import createInsight from "./operations/create-insight.ts";
-import { Insight } from "$models/insight.ts";
+import { z } from "zod";
 
 console.log("Loading configuration");
 
@@ -37,9 +37,11 @@ router.get("/insights", (ctx) => {
 });
 
 router.post("/insights/create", async (ctx) => {
-  const { brand, text } = await ctx.request.body.json();
-  const validatedInputs = Insight.pick({ brand: true, text: true })
-    .safeParse({ brand: Number(brand), text });
+  const body = await ctx.request.body.json();
+  const validatedInputs = z.object({
+    brand: z.coerce.number().int().min(0),
+    text: z.string().min(1),
+  }).safeParse(body);
 
   if (!validatedInputs.success) {
     console.error("Failed to validate inputs", validatedInputs.error);
