@@ -6,6 +6,7 @@ import { Port } from "../lib/utils/index.ts";
 import listInsights from "./operations/list-insights.ts";
 import lookupInsight from "./operations/lookup-insight.ts";
 import createInsight from "./operations/create-insight.ts";
+import deleteInsight from "./operations/delete-insight.ts";
 import { z } from "zod";
 
 console.log("Loading configuration");
@@ -55,8 +56,11 @@ router.post("/insights/create", async (ctx) => {
   ctx.response.body = result;
 });
 
-router.get("/insights/delete", (ctx) => {
-  // TODO
+router.delete("/insights/delete/:id", async (ctx) => {
+  const params = ctx.params as Record<string, any>;
+  const id = z.coerce.number().int().min(0).parse(params.id);
+  await deleteInsight({ db, id });
+  ctx.response.status = 204;
 });
 
 router.get("/insights/:id", (ctx) => {
