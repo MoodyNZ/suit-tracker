@@ -31,7 +31,11 @@ export const Insights = ({ insights, className, onDeleted }: InsightsProps) => {
             insights.map(({ id, text, date, brandId }) => (
               <div className={styles.insight} key={id}>
                 <div className={styles["insight-meta"]}>
-                  <span>{BRANDS.find((b) => b.id === brandId)?.name}</span>
+                  <span>
+                    {BRANDS.find((b) =>
+                      b.id === brandId
+                    )?.name}
+                  </span>
                   <div className={styles["insight-meta-details"]}>
                     <span>{new Date(date).toLocaleString()}</span>
                     <Trash2Icon

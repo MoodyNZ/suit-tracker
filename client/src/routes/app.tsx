@@ -11,17 +11,27 @@ export const App = () => {
   useEffect(() => {
     fetch(`/api/insights`)
       .then((res) => res.json())
-      .then((data) => setInsights(z.array(Insight).parse(data).sort((a, b) => b.date.getTime() - a.date.getTime())));
+      .then((data) =>
+        setInsights(
+          z.array(Insight).parse(data).sort((a, b) =>
+            b.date.getTime() - a.date.getTime()
+          ),
+        )
+      );
   }, []);
 
   return (
     <main className={styles.main}>
-      <Header onCreate={(insight) => setInsights((current) => [insight,...current])} />
+      <Header
+        onCreate={(insight) => setInsights((current) => [insight, ...current])}
+      />
       <Insights
         className={styles.insights}
         insights={insights}
         onDeleted={(id) =>
-          setInsights((current) => current.filter((insight) => insight.id !== id))}
+          setInsights((current) =>
+            current.filter((insight) => insight.id !== id)
+          )}
       />
     </main>
   );
