@@ -15,9 +15,9 @@ export const AddInsight = (props: AddInsightProps) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        brand: formData.get("brandId"),
+        brand: formData.get("brand"),
         text: formData.get("text"),
-      }),
+      } ),
     });
     if (response.ok) {
       props.onClose()
