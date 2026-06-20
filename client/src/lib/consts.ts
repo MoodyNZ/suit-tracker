@@ -1,3 +1,4 @@
+// ToDo: CHUGGS-0001: This data should be served from the server.
 export const BRANDS = [
   { id: 1, name: "Brand 1" },
   { id: 2, name: "Brand 2" },
