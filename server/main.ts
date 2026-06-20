@@ -56,7 +56,7 @@ router.post("/insights/create", async (ctx) => {
   ctx.response.body = result;
 });
 
-router.delete("/insights/delete/:id", async (ctx) => {
+router.delete("/insights/:id", async (ctx) => {
   const params = ctx.params as Record<string, any>;
   const id = z.coerce.number().int().min(0).parse(params.id);
   await deleteInsight({ db, id });
