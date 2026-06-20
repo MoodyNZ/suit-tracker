@@ -7,10 +7,20 @@ import type { Insight } from "../../schemas/insight.ts";
 type InsightsProps = {
   insights: Insight[];
   className?: string;
+  onDeleted?: (id: Insight["id"]) => void;
 };
 
-export const Insights = ({ insights, className }: InsightsProps) => {
-  const deleteInsight = () => undefined;
+export const Insights = ({ insights, className, onDeleted }: InsightsProps) => {
+  const deleteInsight = async (id: Insight["id"]) => {
+    const response = await fetch(`/api/insights/delete/${id}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      onDeleted?.(id);
+    } else {
+      // ToDo: Handle error
+    }
+  };
 
   return (
     <div className={cx(className)}>
@@ -26,7 +36,7 @@ export const Insights = ({ insights, className }: InsightsProps) => {
                     <span>{new Date(date).toLocaleString()}</span>
                     <Trash2Icon
                       className={styles["insight-delete"]}
-                      onClick={deleteInsight}
+                      onClick={() => deleteInsight(id)}
                     />
                   </div>
                 </div>
