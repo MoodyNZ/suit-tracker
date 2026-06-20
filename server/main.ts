@@ -41,7 +41,7 @@ router.post("/insights", async (ctx) => {
   const body = await ctx.request.body.json();
   const validatedInputs = z.object({
     brand: z.coerce.number().int().min(0),
-    text: z.string().min(1),
+    text: z.string().min(0),
   }).safeParse(body);
 
   if (!validatedInputs.success) {
