@@ -11,12 +11,12 @@ export const App = () => {
   useEffect(() => {
     fetch(`/api/insights`)
       .then((res) => res.json())
-      .then((data) => setInsights(z.array(Insight).parse(data)));
+      .then((data) => setInsights(z.array(Insight).parse(data).sort((a, b) => b.date.getTime() - a.date.getTime())));
   }, []);
 
   return (
     <main className={styles.main}>
-      <Header />
+      <Header onCreate={(insight) => setInsights((current) => [insight,...current])} />
       <Insights
         className={styles.insights}
         insights={insights}

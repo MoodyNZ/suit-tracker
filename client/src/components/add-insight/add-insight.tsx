@@ -1,13 +1,14 @@
 import { BRANDS } from "../../lib/consts.ts";
 import { Button } from "../button/button.tsx";
 import { Modal, type ModalProps } from "../modal/modal.tsx";
+import { Insight } from "../../schemas/insight.ts";
 import styles from "./add-insight.module.css";
 
-type AddInsightProps = ModalProps;
+type AddInsightProps = ModalProps & {
+  onCreate?: (insight: Insight) => void;
+};
 
-export const AddInsight = (props: AddInsightProps) => {
-
-
+export const AddInsight = ({ onCreate, ...props }: AddInsightProps) => {
   const addInsight = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Using fetch submission instead of native browser form submission
     const formData = new FormData(e.currentTarget);
@@ -20,6 +21,8 @@ export const AddInsight = (props: AddInsightProps) => {
       } ),
     });
     if (response.ok) {
+      const insight = Insight.parse(await response.json());
+      onCreate?.(insight);
       props.onClose()
     } else {
       // ToDo: Handle error
