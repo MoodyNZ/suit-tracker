@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BRANDS } from "../../lib/consts.ts";
 import { Button } from "../button/button.tsx";
 import { Modal, type ModalProps } from "../modal/modal.tsx";
@@ -9,23 +10,30 @@ type AddInsightProps = ModalProps & {
 };
 
 export const AddInsight = ({ onCreate, ...props }: AddInsightProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const addInsight = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Using fetch submission instead of native browser form submission
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
-    const response = await fetch("/api/insights", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        brand: formData.get("brand"),
-        text: formData.get("text"),
-      } ),
-    });
-    if (response.ok) {
-      const insight = Insight.parse(await response.json());
-      onCreate?.(insight);
-      props.onClose()
-    } else {
-      // ToDo: Handle error
+    try {
+      const response = await fetch("/api/insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: formData.get("brand"),
+          text: formData.get("text"),
+        }),
+      });
+      if (response.ok) {
+        const insight = Insight.parse(await response.json());
+        onCreate?.(insight);
+        props.onClose();
+      } else {
+        // ToDo: Handle error
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -50,7 +58,13 @@ export const AddInsight = ({ onCreate, ...props }: AddInsightProps) => {
             placeholder="Something insightful..."
           />
         </label>
-        <Button className={styles.submit} type="submit" label="Add insight" />
+        <Button
+          className={styles.submit}
+          type="submit"
+          label="Add insight"
+          disabled={isSubmitting}
+          autoFocus
+        />
       </form>
     </Modal>
   );
