@@ -37,7 +37,7 @@ router.get("/insights", (ctx) => {
   ctx.response.status = 200;
 });
 
-router.post("/insights/create", async (ctx) => {
+router.post("/insights", async (ctx) => {
   const body = await ctx.request.body.json();
   const validatedInputs = z.object({
     brand: z.coerce.number().int().min(0),
