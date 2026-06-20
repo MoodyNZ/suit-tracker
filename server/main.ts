@@ -37,11 +37,11 @@ router.get("/insights", (ctx) => {
   ctx.response.status = 200;
 });
 
-router.post("/insights/create", async (ctx) => {
+router.post("/insights", async (ctx) => {
   const body = await ctx.request.body.json();
   const validatedInputs = z.object({
     brand: z.coerce.number().int().min(0),
-    text: z.string().min(1),
+    text: z.string().min(0),
   }).safeParse(body);
 
   if (!validatedInputs.success) {
@@ -56,7 +56,7 @@ router.post("/insights/create", async (ctx) => {
   ctx.response.body = result;
 });
 
-router.delete("/insights/delete/:id", async (ctx) => {
+router.delete("/insights/:id", async (ctx) => {
   const params = ctx.params as Record<string, any>;
   const id = z.coerce.number().int().min(0).parse(params.id);
   await deleteInsight({ db, id });

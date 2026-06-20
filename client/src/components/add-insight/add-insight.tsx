@@ -12,7 +12,7 @@ export const AddInsight = ({ onCreate, ...props }: AddInsightProps) => {
   const addInsight = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Using fetch submission instead of native browser form submission
     const formData = new FormData(e.currentTarget);
-    const response = await fetch("/api/insights/create", {
+    const response = await fetch("/api/insights", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

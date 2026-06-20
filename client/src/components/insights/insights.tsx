@@ -12,7 +12,7 @@ type InsightsProps = {
 
 export const Insights = ({ insights, className, onDeleted }: InsightsProps) => {
   const deleteInsight = async (id: Insight["id"]) => {
-    const response = await fetch(`/api/insights/delete/${id}`, {
+    const response = await fetch(`/api/insights/${id}`, {
       method: "DELETE",
     });
     if (response.ok) {
@@ -44,7 +44,7 @@ export const Insights = ({ insights, className, onDeleted }: InsightsProps) => {
               </div>
             ))
           )
-          : <p>We have no insight!</p>}
+          : <p>We have no insights!</p>}
       </div>
     </div>
   );
