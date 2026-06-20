@@ -36,11 +36,13 @@ router.get("/insights", (ctx) => {
   ctx.response.status = 200;
 });
 
-router.post("/insights/create", (ctx) => {
+router.post("/insights/create", async (ctx) => {
+  const { brand, text } = await ctx.request.body.json();
   const validatedInputs = Insight.pick({ brand: true, text: true })
-    .safeParse(Object.fromEntries(ctx.request.url.searchParams));
+    .safeParse({ brand: Number(brand), text });
 
   if (!validatedInputs.success) {
+    console.error("Failed to validate inputs", validatedInputs.error);
     ctx.response.status = 400;
     ctx.response.body = { error: "Failed to create insight" };
     return;
