@@ -6,22 +6,42 @@ import styles from "./add-insight.module.css";
 type AddInsightProps = ModalProps;
 
 export const AddInsight = (props: AddInsightProps) => {
-  const addInsight = () => undefined;
+
+
+  const addInsight = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Using fetch submission instead of native browser form submission
+    const formData = new FormData(e.currentTarget);
+    const response = await fetch("/api/insights/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        brand: formData.get("brandId"),
+        text: formData.get("text"),
+      }),
+    });
+    if (response.ok) {
+      props.onClose()
+    } else {
+      // ToDo: Handle error
+    }
+  };
 
   return (
     <Modal {...props}>
       <h1 className={styles.heading}>Add a new insight</h1>
       <form className={styles.form} onSubmit={addInsight}>
-        <label className={styles.field}>
-          <select className={styles["field-input"]}>
+        <label htmlFor="brand" className={styles.field}>
+          Brand
+          <select name="brand" className={styles["field-input"]}>
             {BRANDS.map(({ id, name }) => <option key={id} value={id}>
               {name}
             </option>)}
           </select>
         </label>
-        <label className={styles.field}>
+        <label htmlFor="text" className={styles.field}>
           Insight
           <textarea
+            name="text"
             className={styles["field-input"]}
             rows={5}
             placeholder="Something insightful..."
