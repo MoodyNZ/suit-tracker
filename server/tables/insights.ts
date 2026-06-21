@@ -20,5 +20,7 @@ export type Insert = {
   text: string;
 };
 
-export const insertStatement = (item: Insert) =>
-  `INSERT INTO insights (brand, createdAt, text) VALUES (${item.brand}, '${item.createdAt}', '${item.text}') RETURNING *`;
+// Warning: Using string template injection is dangerous and can lead to SQL injection if not handled properly
+// Use input paramertisation for queries to ensure that user input is safely escaped and treated as data, and not executed as SQL
+export const insertStatement =
+  `INSERT INTO insights (brand, createdAt, text) VALUES (:brand, :createdAt, :text) RETURNING *`;
