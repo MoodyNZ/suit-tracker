@@ -11,22 +11,17 @@ type Input = HasDBClient & {
 export default (input: Input): Insight => {
   console.log("Creating insight");
 
-  const queryString = insertStatement({
-    ...input,
+  // Ensure we parameterize the query to prevent SQL injection
+  const result = input.db.prepare(insertStatement).get<insightsTable.Row>({
+    brand: input.brand,
     createdAt: new Date().toISOString(),
+    text: input.text,
   });
 
-  const createResult = input.db.prepare(queryString).get<
-    insightsTable.Row
-  >();
-
-  if (createResult) {
-    return {
-      ...createResult,
-      createdAt: new Date(createResult.createdAt),
-    };
+  if (result) {
+    return { ...result, createdAt: new Date(result.createdAt) };
   }
 
-  console.error("Failed to create insight: ", createResult);
+  console.error("Failed to create insight: ", result);
   throw new OperationError("Failed to create insight");
 };
